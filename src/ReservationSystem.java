@@ -8,45 +8,47 @@ public class ReservationSystem {
     static int count = 0;
 
     //add reservation
-    public static void addReservation(int num, int time, int timeMade) {
+    public static void addReservation(String name, int num, int time, int timeMade) {
         if (count < 10) {
-            reservations[count] = new Reservation(num, time, timeMade);
+            reservations[count] = new Reservation(name, num, time, timeMade);
             count++;
             System.out.println(count);
         } else {
             System.out.println("The restaurant is full.");
         }
+        displayReservation();
     }
 
-//    public static void deleteReservation (int reservationNum) {
-//
-//        reservationNum = 1;
-//        if (reservationNum < 0 || reservationNum > reservations.length) {
-//            System.out.println("Invalid reservation number. Not found");
-//        }
-//        else {
-//            for (int i = reservationNum; i < reservations.length - 1; i++) {
-//                reservations[i] = reservations[i + 1];
-//            }
-//            reservations[reservations.length - 1] = new Reservation(0, 0, 0);
-//            System.out.println("Reservation " + reservationNum + " deleted.");
-//        }
-//        displayReservation();
-//    }
+    public static void deleteReservation(String reservationName) {
+        boolean nameTrue;
 
-        public static void deleteReservation(int reservationNum) {
-            if (reservationNum >= 0 && reservationNum < count) {
-                for (int i = reservationNum; i < count - 1; i++) {
-                    reservations[i] = reservations[i + 1];
-                }
-                reservations[count - 1] = null;
-                count--;
-                System.out.println("Reservation " + reservationNum + " deleted.");
-            } else {
-                System.out.println("Invalid reservation number. Not found");
+        for (Reservation s: reservations) {
+            if (reservationName == s) {
+                nameTrue = true;
             }
-            displayReservation();
         }
+
+        if (reservationNum >= 0 && reservationNum < count) {
+            for (   i < count - 1; i++) {
+                reservations[i] = reservations[i + 1];
+            }
+            reservations[count - 1] = null;
+            count--;
+            System.out.println("Reservation " + reservationName + " deleted.");
+        } else {
+            System.out.println("Invalid reservation number. Not found");
+        }
+        displayReservation();
+    }
+
+    public static void changeReservation(String reservationName, int reservationNum, int newGroupSize, int newReservationTime, int newTimeMade) {
+        if (reservationNum >=  0 && reservationNum < count) {
+            reservations[reservationNum] = new Reservation(reservationName, newGroupSize, newReservationTime, newTimeMade);
+            System.out.println("Reservation " + reservationNum + " updated. Reservation changed to group of " + newGroupSize + " at " + newReservationTime + ".");
+        } else {
+            System.out.println("Reservation not found.");
+        }
+    }
 
     public static void displayReservation() {
         for(int i=0; i < reservations.length; i++){
@@ -93,12 +95,60 @@ public class ReservationSystem {
     }
 
     public static void main(String[] args) {
-        addReservation(10, 8, 16);
-        addReservation(5, 7, 20);
-        displayReservation();
-        bubbleSortReservations();
-        deleteReservation(1);
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("Input a number:");
+            System.out.println("1. Add Reservation");
+            System.out.println("2. Delete Reservation");
+            System.out.println("3. Display Reservations");
+            System.out.println("4. Change Reservation");
+            System.out.println("5. Exit");
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.println("Enter name:");
+                    String name = scanner.next();
+                    System.out.println("Enter group size:");
+                    int groupSize = scanner.nextInt();
+                    System.out.println("Enter reservation time:");
+                    int reservationTime = scanner.nextInt();
+                    System.out.println("Enter time made:");
+                    int timeMade = scanner.nextInt();
+                    ReservationSystem.addReservation(name, groupSize, reservationTime, timeMade);
+                    break;
+                case 2:
+                    System.out.println("Enter reservation number to be cancelled:");
+                    int reservationToDelete = scanner.nextInt();
+                    ReservationSystem.deleteReservation(reservationToDelete);
+                    break;
+                case 3:
+                    ReservationSystem.displayReservation();
+                    break;
+                case 4:
+                    System.out.println("Enter reservation name:");
+                    String rName = scanner.next();
+                    System.out.println("Enter reservation number to be changed.");
+                    int reservationToBeChanged = scanner.nextInt();
+                    System.out.println("Enter new group size:");
+                    int newGroup = scanner.nextInt();
+                    System.out.println("Enter new reservation time:");
+                    int newTime = scanner.nextInt();
+                    System.out.println("Enter new time when reservation was made:");
+                    int newMade = scanner.nextInt();
+                    ReservationSystem.changeReservation(rName, reservationToBeChanged, newGroup, newTime, newMade);
+                    break;
+                case 5:
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+                    break;
+            }
+        }
     }
-
-
 }
+
+
+
